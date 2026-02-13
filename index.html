@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GeneQuest - Генетическая Одиссея</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 800px;
+            width: 100%;
+            padding: 40px;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+
+        .game-screen {
+            display: none;
+        }
+
+        .game-screen.active {
+            display: block;
+        }
+
+        .start-screen {
+            text-align: center;
+        }
+
+        .start-screen p {
+            color: #555;
+            line-height: 1.8;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2em;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .btn:active {
+            transform: translateY(-1px);
+        }
+
+        .question-container {
+            margin-bottom: 30px;
+        }
+
+        .question {
+            background: #f8f9ff;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border-left: 5px solid #667eea;
+        }
+
+        .question h2 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option {
+            background: white;
+            border: 2px solid #e0e0e0;
+            padding: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.05em;
+        }
+
+        .option:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+            transform: translateX(5px);
+        }
+
+        .option.selected {
+            border-color: #667eea;
+            background: #667eea;
+            color: white;
+        }
+
+        .option.correct {
+            border-color: #4CAF50;
+            background: #4CAF50;
+            color: white;
+        }
+
+        .option.incorrect {
+            border-color: #f44336;
+            background: #f44336;
+            color: white;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.3s ease;
+        }
+
+        .score {
+            text-align: center;
+            font-size: 1.2em;
+            color: #667eea;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .result-screen {
+            text-align: center;
+        }
+
+        .result-screen h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 2em;
+        }
+
+        .result-screen p {
+            font-size: 1.3em;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .feedback {
+            background: #f8f9ff;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .feedback h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .emoji {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .btn {
+                padding: 12px 30px;
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧬 GeneQuest</h1>
+        <p class="subtitle">Генетическая Одиссея</p>
+
+        <!-- Начальный экран -->
+        <div id="startScreen" class="game-screen active start-screen">
+            <p>
+                Добро пожаловать в увлекательное путешествие в мир генетики!
+                Вы станете исследователем, разгадывающим тайны ДНК, наследственности
+                и эволюции. Проверьте свои знания и узнайте что-то новое!
+            </p>
+            <button class="btn" onclick="startGame()">Начать игру</button>
+        </div>
+
+        <!-- Экран игры -->
+        <div id="gameScreen" class="game-screen">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <div class="score">
+                Очки: <span id="scoreDisplay">0</span>
+            </div>
+            <div id="questionContainer" class="question-container"></div>
+            <button id="nextBtn" class="btn" onclick="nextQuestion()" style="display: none;">
+                Следующий вопрос
+            </button>
+        </div>
+
+        <!-- Экран результатов -->
+        <div id="resultScreen" class="game-screen result-screen">
+            <div id="emojiResult" class="emoji"></div>
+            <h2 id="resultTitle"></h2>
+            <p>Ваш результат: <strong id="finalScore"></strong></p>
+            <div id="feedbackContainer" class="feedback"></div>
+            <button class="btn" onclick="restartGame()">Играть снова</button>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "Что такое ДНК?",
+                options: [
+                    "Белок, который содержится в клетках",
+                    "Молекула, хранящая генетическую информацию",
+                    "Вид энергии в организме",
+                    "Гормон роста"
+                ],
+                correct: 1,
+                explanation: "ДНК (дезоксирибонуклеиновая кислота) - это молекула, которая содержит генетические инструкции для развития и функционирования всех живых организмов."
+            },
+            {
+                question: "Сколько хромосом у человека?",
+                options: [
+                    "23 пары (46 хромосом)",
+                    "20 пар (40 хромосом)",
+                    "25 пар (50 хромосом)",
+                    "30 пар (60 хромосом)"
+                ],
+                correct: 0,
+                explanation: "У человека 23 пары хромосом, всего 46 хромосом. Половину мы получаем от матери, половину от отца."
+            },
+            {
+                question: "Кто открыл законы наследственности?",
+                options: [
+                    "Чарльз Дарвин",
+                    "Грегор Мендель",
+                    "Луи Пастер",
+                    "Исаак Ньютон"
+                ],
+                correct: 1,
+                explanation: "Грегор Мендель, австрийский монах, открыл основные законы наследственности в XIX веке, проводя опыты с горохом."
+            },
+            {
+                question: "Что определяет цвет глаз?",
+                options: [
+                    "Количество витаминов в организме",
+                    "Гены родителей",
+                    "Питание в детстве",
+                    "Климат местности"
+                ],
+                correct: 1,
+                explanation: "Цвет глаз определяется генами, которые мы наследуем от родителей. Это полигенный признак, зависящий от нескольких генов."
+            },
+            {
+                question: "Что такое мутация?",
+                options: [
+                    "Изменение в последовательности ДНК",
+                    "Болезнь растений",
+                    "Процесс деления клеток",
+                    "Вид бактерии"
+                ],
+                correct: 0,
+                explanation: "Мутация - это изменение в последовательности ДНК. Мутации могут быть полезными, вредными или нейтральными и являются основой эволюции."
+            },
+            {
+                question: "Какая структура ДНК была открыта Уотсоном и Криком?",
+                options: [
+                    "Одиночная спираль",
+                    "Двойная спираль",
+                    "Тройная спираль",
+                    "Квадратная форма"
+                ],
+                correct: 1,
+                explanation: "В 1953 году Джеймс Уотсон и Фрэнсис Крик открыли, что ДНК имеет структуру двойной спирали."
+            },
+            {
+                question: "Какие азотистые основания входят в состав ДНК?",
+                options: [
+                    "A, B, C, D",
+                    "A, T, G, C",
+                    "W, X, Y, Z",
+                    "1, 2, 3, 4"
+                ],
+                correct: 1,
+                explanation: "ДНК состоит из четырех азотистых оснований: аденин (A), тимин (T), гуанин (G) и цитозин (C). Они образуют пары: A-T и G-C."
+            },
+            {
+                question: "Что такое геном?",
+                options: [
+                    "Один ген организма",
+                    "Совокупность всех генов организма",
+                    "Клетка организма",
+                    "Белок в клетке"
+                ],
+                correct: 1,
+                explanation: "Геном - это полный набор генетической информации организма, включающий все гены и некодирующие последовательности ДНК."
+            },
+            {
+                question: "Где в клетке находится ДНК?",
+                options: [
+                    "В цитоплазме",
+                    "В ядре",
+                    "В мембране",
+                    "В вакуоли"
+                ],
+                correct: 1,
+                explanation: "У эукариот (организмов с клеточным ядром) основная часть ДНК находится в ядре клетки. Небольшое количество ДНК также есть в митохондриях."
+            },
+            {
+                question: "Что такое клонирование?",
+                options: [
+                    "Создание генетической копии организма",
+                    "Лечение болезни",
+                    "Изменение цвета кожи",
+                    "Увеличение размера организма"
+                ],
+                correct: 0,
+                explanation: "Клонирование - это процесс создания генетически идентичной копии организма. Самый известный пример - овечка Долли, клонированная в 1996 году."
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let selectedAnswer = null;
+
+        function startGame() {
+            currentQuestion = 0;
+            score = 0;
+            document.getElementById('startScreen').classList.remove('active');
+            document.getElementById('gameScreen').classList.add('active');
+            showQuestion();
+        }
+
+        function showQuestion() {
+            selectedAnswer = null;
+            const question = questions[currentQuestion];
+            const container = document.getElementById('questionContainer');
+
+            let html = `
+                <div class="question">
+                    <h2>Вопрос ${currentQuestion + 1} из ${questions.length}</h2>
+                    <p>${question.question}</p>
+                </div>
+                <div class="options">
+            `;
+
+            question.options.forEach((option, index) => {
+                html += `<div class="option" onclick="selectAnswer(${index})" data-index="${index}">${option}</div>`;
+            });
+
+            html += '</div>';
+            container.innerHTML = html;
+
+            updateProgress();
+            document.getElementById('nextBtn').style.display = 'none';
+        }
+
+        function selectAnswer(index) {
+            if (selectedAnswer !== null) return;
+
+            selectedAnswer = index;
+            const question = questions[currentQuestion];
+            const options = document.querySelectorAll('.option');
+
+            options.forEach((option, i) => {
+                option.style.pointerEvents = 'none';
+                if (i === question.correct) {
+                    option.classList.add('correct');
+                } else if (i === selectedAnswer) {
+                    option.classList.add('incorrect');
+                }
+            });
+
+            if (selectedAnswer === question.correct) {
+                score += 10;
+                updateScore();
+            }
+
+            document.getElementById('nextBtn').style.display = 'block';
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            if (currentQuestion < questions.length) {
+                showQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function updateProgress() {
+            const progress = ((currentQuestion + 1) / questions.length) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+        }
+
+        function updateScore() {
+            document.getElementById('scoreDisplay').textContent = score;
+        }
+
+        function showResults() {
+            document.getElementById('gameScreen').classList.remove('active');
+            document.getElementById('resultScreen').classList.add('active');
+
+            const maxScore = questions.length * 10;
+            const percentage = (score / maxScore) * 100;
+
+            let emoji, title, feedback;
+
+            if (percentage >= 90) {
+                emoji = '🏆';
+                title = 'Невероятно!';
+                feedback = 'Вы настоящий эксперт в генетике! Ваши знания впечатляют!';
+            } else if (percentage >= 70) {
+                emoji = '🌟';
+                title = 'Отлично!';
+                feedback = 'У вас отличные знания в области генетики. Продолжайте в том же духе!';
+            } else if (percentage >= 50) {
+                emoji = '👍';
+                title = 'Хорошо!';
+                feedback = 'Неплохой результат! Немного практики - и вы станете экспертом.';
+            } else {
+                emoji = '📚';
+                title = 'Продолжайте учиться!';
+                feedback = 'Генетика - сложная наука, но вы на правильном пути. Попробуйте еще раз!';
+            }
+
+            document.getElementById('emojiResult').textContent = emoji;
+            document.getElementById('resultTitle').textContent = title;
+            document.getElementById('finalScore').textContent = `${score} из ${maxScore} (${percentage.toFixed(0)}%)`;
+            document.getElementById('feedbackContainer').innerHTML = `
+                <h3>Результат</h3>
+                <p>${feedback}</p>
+            `;
+        }
+
+        function restartGame() {
+            document.getElementById('resultScreen').classList.remove('active');
+            document.getElementById('startScreen').classList.add('active');
+        }
+    </script>
+</body>
+</html>
