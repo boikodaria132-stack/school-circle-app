@@ -447,6 +447,163 @@
             50% { transform: translateY(-10px); }
         }
 
+        /* ИНСТРУКЦИЯ: Стили */
+        .how-to-play {
+            max-height: 550px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .how-to-play::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .how-to-play::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .how-to-play::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 10px;
+        }
+
+        .instruction-section {
+            background: #f8f9ff;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border-left: 5px solid #667eea;
+        }
+
+        .instruction-section h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .instruction-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .instruction-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            align-items: start;
+            gap: 12px;
+            line-height: 1.6;
+        }
+
+        .instruction-list li:last-child {
+            border-bottom: none;
+        }
+
+        .step-icon {
+            font-size: 1.2em;
+            min-width: 25px;
+            flex-shrink: 0;
+        }
+
+        .level-showcase {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .level-card {
+            background: white;
+            padding: 12px;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid #e0e0e0;
+            transition: all 0.3s ease;
+        }
+
+        .level-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+            border-color: #667eea;
+        }
+
+        .level-card .icon {
+            font-size: 2.2em;
+            margin-bottom: 5px;
+        }
+
+        .level-card .name {
+            font-weight: bold;
+            color: #333;
+            font-size: 0.9em;
+            margin-bottom: 3px;
+        }
+
+        .level-card .points {
+            font-size: 0.75em;
+            color: #666;
+        }
+
+        .achievement-showcase {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .achievement-mini {
+            background: white;
+            padding: 10px;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid #e0e0e0;
+            transition: all 0.3s ease;
+        }
+
+        .achievement-mini:hover {
+            border-color: #FFD700;
+            transform: scale(1.05);
+        }
+
+        .achievement-mini .icon {
+            font-size: 1.8em;
+            margin-bottom: 5px;
+        }
+
+        .achievement-mini .name {
+            font-size: 0.75em;
+            font-weight: bold;
+            color: #333;
+            line-height: 1.2;
+        }
+
+        .tip-box {
+            background: linear-gradient(135deg, #FFF9E6 0%, #FFEDCC 100%);
+            border-left: 5px solid #FFD700;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+        }
+
+        .tip-box .tip-title {
+            font-weight: bold;
+            color: #FF9800;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.1em;
+        }
+
+        .tip-box p {
+            color: #555;
+            line-height: 1.6;
+        }
+
         @media (max-width: 600px) {
             .container {
                 padding: 20px;
@@ -484,8 +641,11 @@
             </p>
             <button class="btn" onclick="startGame()">🚀 Раскрыть тайны ДНК!</button>
 
-            <!-- Кнопки для просмотра достижений и лидеров -->
-            <div style="margin-top: 20px;">
+            <!-- Кнопки для просмотра достижений, лидеров и инструкции -->
+            <div style="margin-top: 20px; display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;">
+                <button class="btn" onclick="showHowToPlay()" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                    📖 Как играть
+                </button>
                 <button class="btn" onclick="showAchievements()" style="background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);">
                     🏆 Достижения
                 </button>
@@ -538,6 +698,162 @@
                 <div id="leaderboardList"></div>
             </div>
             <button class="btn" onclick="backToStart()">Назад</button>
+        </div>
+
+        <!-- Экран "Как играть" -->
+        <div id="howToPlayScreen" class="game-screen">
+            <h2 style="color: #667eea; text-align: center; margin-bottom: 20px;">📖 Как играть в GeneQuest</h2>
+
+            <div class="how-to-play">
+                <!-- Основы игры -->
+                <div class="instruction-section">
+                    <h3><span class="icon">🎮</span> Основы игры</h3>
+                    <ul class="instruction-list">
+                        <li>
+                            <span class="step-icon">1️⃣</span>
+                            <span>Нажмите <strong>"🚀 Раскрыть тайны ДНК!"</strong> чтобы начать игру</span>
+                        </li>
+                        <li>
+                            <span class="step-icon">2️⃣</span>
+                            <span>Вам дается <strong>15 случайных вопросов</strong> из базы 100 вопросов</span>
+                        </li>
+                        <li>
+                            <span class="step-icon">3️⃣</span>
+                            <span>Выберите один из четырех вариантов ответа</span>
+                        </li>
+                        <li>
+                            <span class="step-icon">4️⃣</span>
+                            <span>После ответа появится <strong>объяснение</strong> с удивительными фактами!</span>
+                        </li>
+                        <li>
+                            <span class="step-icon">5️⃣</span>
+                            <span>За каждый правильный ответ вы получаете <strong>10 очков</strong></span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Система уровней -->
+                <div class="instruction-section">
+                    <h3><span class="icon">⭐</span> Система уровней</h3>
+                    <p style="margin-bottom: 10px;">Очки накапливаются и повышают ваш уровень:</p>
+                    <div class="level-showcase">
+                        <div class="level-card">
+                            <div class="icon">🧬</div>
+                            <div class="name">Новичок ДНК</div>
+                            <div class="points">0-100 очков</div>
+                        </div>
+                        <div class="level-card">
+                            <div class="icon">🔬</div>
+                            <div class="name">Лаборант</div>
+                            <div class="points">100-300</div>
+                        </div>
+                        <div class="level-card">
+                            <div class="icon">👨‍🔬</div>
+                            <div class="name">Генетик</div>
+                            <div class="points">300-600</div>
+                        </div>
+                        <div class="level-card">
+                            <div class="icon">🎓</div>
+                            <div class="name">Профессор</div>
+                            <div class="points">600-1000</div>
+                        </div>
+                        <div class="level-card">
+                            <div class="icon">🏆</div>
+                            <div class="name">Нобелевский лауреат</div>
+                            <div class="points">1000+</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Достижения -->
+                <div class="instruction-section">
+                    <h3><span class="icon">🏆</span> Достижения</h3>
+                    <p style="margin-bottom: 10px;">Получайте бонусные очки за особые достижения:</p>
+                    <div class="achievement-showcase">
+                        <div class="achievement-mini">
+                            <div class="icon">🎯</div>
+                            <div class="name">Первый шаг<br>+10</div>
+                        </div>
+                        <div class="achievement-mini">
+                            <div class="icon">💯</div>
+                            <div class="name">Безупречно!<br>+50</div>
+                        </div>
+                        <div class="achievement-mini">
+                            <div class="icon">⚡</div>
+                            <div class="name">Серия х5<br>+20</div>
+                        </div>
+                        <div class="achievement-mini">
+                            <div class="icon">🔥</div>
+                            <div class="name">Серия х10<br>+40</div>
+                        </div>
+                        <div class="achievement-mini">
+                            <div class="icon">⏱️</div>
+                            <div class="name">Молниеносный<br>+15</div>
+                        </div>
+                        <div class="achievement-mini">
+                            <div class="icon">🏃</div>
+                            <div class="name">Марафонец<br>+30</div>
+                        </div>
+                        <div class="achievement-mini">
+                            <div class="icon">🔍</div>
+                            <div class="name">Исследователь<br>+25</div>
+                        </div>
+                        <div class="achievement-mini">
+                            <div class="icon">📚</div>
+                            <div class="name">Учёный<br>+50</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Бонусные фишки -->
+                <div class="instruction-section">
+                    <h3><span class="icon">🎁</span> Бонусные фишки</h3>
+                    <ul class="instruction-list">
+                        <li>
+                            <span class="step-icon">🔥</span>
+                            <span><strong>Серия правильных ответов</strong> — отвечайте правильно подряд и увидите COMBO-индикатор!</span>
+                        </li>
+                        <li>
+                            <span class="step-icon">⚡</span>
+                            <span><strong>Быстрый ответ</strong> — ответьте за <3 секунды для достижения "Молниеносный"</span>
+                        </li>
+                        <li>
+                            <span class="step-icon">💎</span>
+                            <span><strong>Повышение уровня</strong> — получите яркое уведомление при достижении нового уровня!</span>
+                        </li>
+                        <li>
+                            <span class="step-icon">📊</span>
+                            <span><strong>Таблица лидеров</strong> — ваш топ-10 лучших результатов с медалями 🥇🥈🥉</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Советы -->
+                <div class="tip-box">
+                    <div class="tip-title">💡 Советы для успеха</div>
+                    <ul style="padding-left: 20px; margin-top: 8px;">
+                        <li>Читайте объяснения — они помогут в следующих играх!</li>
+                        <li>Отвечайте быстро, но обдуманно для бонусов</li>
+                        <li>Каждая игра уникальна — вопросы выбираются случайно</li>
+                        <li>Прогресс сохраняется автоматически</li>
+                        <li>Играйте регулярно для получения "Марафонец"</li>
+                    </ul>
+                </div>
+
+                <!-- Что узнаете -->
+                <div class="instruction-section">
+                    <h3><span class="icon">🧬</span> Что вы узнаете</h3>
+                    <p style="line-height: 1.7;">
+                        В GeneQuest вы откроете <strong>100 невероятных тайн генетики</strong>: от структуры ДНК
+                        и законов наследственности до современных технологий CRISPR и эпигенетики.
+                        Узнаете о "прыгающих генах", трёхродительском ЭКО, генах суперсилы и долголетия,
+                        ДНК в космосе и многое другое! <br><br>
+                        <strong>Образование может быть увлекательным!</strong> 🚀
+                    </p>
+                </div>
+            </div>
+
+            <button class="btn" onclick="backToStart()" style="margin-top: 20px;">Назад</button>
         </div>
     </div>
 
@@ -791,8 +1107,15 @@
         function backToStart() {
             document.getElementById('achievementsScreen').classList.remove('active');
             document.getElementById('leaderboardScreen').classList.remove('active');
+            document.getElementById('howToPlayScreen').classList.remove('active');
             document.getElementById('startScreen').classList.add('active');
             displayPlayerStats();
+        }
+
+        // ИНСТРУКЦИЯ: Показать экран "Как играть"
+        function showHowToPlay() {
+            document.getElementById('startScreen').classList.remove('active');
+            document.getElementById('howToPlayScreen').classList.add('active');
         }
 
         const allQuestions = [
