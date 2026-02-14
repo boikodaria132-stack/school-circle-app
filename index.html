@@ -258,6 +258,195 @@
             animation: pulse 0.5s ease-in-out;
         }
 
+        /* ГЕЙМИФИКАЦИЯ: Стили для системы уровней и достижений */
+        .player-stats {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .level-badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+
+        .level-badge .icon {
+            font-size: 2em;
+        }
+
+        .total-score {
+            font-size: 1.2em;
+        }
+
+        .achievements-container {
+            background: #f8f9ff;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .achievement {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .achievement.unlocked {
+            border-color: #FFD700;
+            background: linear-gradient(135deg, #FFF9E6 0%, #FFEDCC 100%);
+            box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
+        }
+
+        .achievement.locked {
+            opacity: 0.5;
+            filter: grayscale(100%);
+        }
+
+        .achievement .icon {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .achievement .title {
+            font-weight: bold;
+            font-size: 0.9em;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .achievement .desc {
+            font-size: 0.75em;
+            color: #666;
+        }
+
+        .leaderboard {
+            background: #f8f9ff;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .leaderboard-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .leaderboard-item.top1 {
+            border-left-color: #FFD700;
+            background: linear-gradient(135deg, #FFF9E6 0%, #FFEDCC 100%);
+        }
+
+        .leaderboard-item.top2 {
+            border-left-color: #C0C0C0;
+        }
+
+        .leaderboard-item.top3 {
+            border-left-color: #CD7F32;
+        }
+
+        .leaderboard-rank {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #667eea;
+            width: 40px;
+        }
+
+        .leaderboard-info {
+            flex: 1;
+        }
+
+        .leaderboard-score {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .new-achievement-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            text-align: center;
+            animation: achievementPop 0.5s ease-out forwards;
+        }
+
+        @keyframes achievementPop {
+            0% {
+                transform: translate(-50%, -50%) scale(0);
+                opacity: 0;
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.1);
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 1;
+            }
+        }
+
+        .streak-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: #FF6B6B;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        .combo-multiplier {
+            position: fixed;
+            top: 20%;
+            right: 20px;
+            background: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 100%);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 15px;
+            font-size: 1.5em;
+            font-weight: bold;
+            box-shadow: 0 5px 20px rgba(255, 107, 107, 0.5);
+            animation: bounce 0.5s ease-in-out;
+            z-index: 999;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
         @media (max-width: 600px) {
             .container {
                 padding: 20px;
@@ -281,6 +470,9 @@
 
         <!-- Начальный экран -->
         <div id="startScreen" class="game-screen active start-screen">
+            <!-- Статистика игрока -->
+            <div class="player-stats" id="playerStats"></div>
+
             <p>
                 🔬 Готовы раскрыть НЕВЕРОЯТНЫЕ тайны ДНК?<br><br>
                 📊 <strong>100 УНИКАЛЬНЫХ ВОПРОСОВ</strong> в базе данных!<br>
@@ -291,6 +483,16 @@
                 ⭐ <strong>Каждый ответ - шокирующее открытие!</strong>
             </p>
             <button class="btn" onclick="startGame()">🚀 Раскрыть тайны ДНК!</button>
+
+            <!-- Кнопки для просмотра достижений и лидеров -->
+            <div style="margin-top: 20px;">
+                <button class="btn" onclick="showAchievements()" style="background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);">
+                    🏆 Достижения
+                </button>
+                <button class="btn" onclick="showLeaderboard()" style="background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);">
+                    📊 Лидеры
+                </button>
+            </div>
         </div>
 
         <!-- Экран игры -->
@@ -313,11 +515,286 @@
             <h2 id="resultTitle"></h2>
             <p>Ваш результат: <strong id="finalScore"></strong></p>
             <div id="feedbackContainer" class="feedback"></div>
+
+            <!-- Новые достижения -->
+            <div id="newAchievementsContainer"></div>
+
             <button class="btn" onclick="restartGame()">Играть снова</button>
+        </div>
+
+        <!-- Экран достижений -->
+        <div id="achievementsScreen" class="game-screen">
+            <h2 style="color: #667eea; text-align: center; margin-bottom: 20px;">🏆 Ваши достижения</h2>
+            <div class="achievements-container">
+                <div id="achievementsGrid" class="achievements-grid"></div>
+            </div>
+            <button class="btn" onclick="backToStart()">Назад</button>
+        </div>
+
+        <!-- Экран таблицы лидеров -->
+        <div id="leaderboardScreen" class="game-screen">
+            <h2 style="color: #667eea; text-align: center; margin-bottom: 20px;">📊 Таблица лидеров</h2>
+            <div class="leaderboard">
+                <div id="leaderboardList"></div>
+            </div>
+            <button class="btn" onclick="backToStart()">Назад</button>
         </div>
     </div>
 
     <script>
+        // ГЕЙМИФИКАЦИЯ: Система уровней
+        const levels = [
+            {name: "Новичок ДНК", min: 0, icon: "🧬", color: "#667eea"},
+            {name: "Лаборант", min: 100, icon: "🔬", color: "#764ba2"},
+            {name: "Генетик", min: 300, icon: "👨‍🔬", color: "#4CAF50"},
+            {name: "Профессор", min: 600, icon: "🎓", color: "#FF9800"},
+            {name: "Нобелевский лауреат", min: 1000, icon: "🏆", color: "#FFD700"}
+        ];
+
+        // ГЕЙМИФИКАЦИЯ: Определение достижений
+        const achievementsDefs = {
+            firstGame: {name: "Первый шаг", desc: "Завершить первую игру", icon: "🎯", points: 10},
+            perfectGame: {name: "Безупречно!", desc: "100% правильных ответов", icon: "💯", points: 50},
+            streak5: {name: "Серия х5", desc: "5 правильных ответов подряд", icon: "⚡", points: 20},
+            streak10: {name: "Серия х10", desc: "10 правильных ответов подряд", icon: "🔥", points: 40},
+            speedster: {name: "Молниеносный", desc: "Ответ за <3 секунды", icon: "⏱️", points: 15},
+            marathoner: {name: "Марафонец", desc: "Сыграть 10 игр", icon: "🏃", points: 30},
+            explorer: {name: "Исследователь", desc: "Ответить на 50 вопросов", icon: "🔍", points: 25},
+            scholar: {name: "Учёный", desc: "Ответить на 100 вопросов", icon: "📚", points: 50}
+        };
+
+        // ГЕЙМИФИКАЦИЯ: Загрузка прогресса
+        function loadProgress() {
+            const saved = localStorage.getItem('genequest_progress');
+            if (saved) {
+                return JSON.parse(saved);
+            }
+            return {
+                totalScore: 0,
+                gamesPlayed: 0,
+                questionsAnswered: 0,
+                correctAnswers: 0,
+                achievements: [],
+                leaderboard: [],
+                bestScore: 0,
+                currentStreak: 0,
+                bestStreak: 0
+            };
+        }
+
+        // ГЕЙМИФИКАЦИЯ: Сохранение прогресса
+        function saveProgress(progress) {
+            localStorage.setItem('genequest_progress', JSON.stringify(progress));
+        }
+
+        // ГЕЙМИФИКАЦИЯ: Получение уровня
+        function getLevel(totalScore) {
+            for (let i = levels.length - 1; i >= 0; i--) {
+                if (totalScore >= levels[i].min) {
+                    return levels[i];
+                }
+            }
+            return levels[0];
+        }
+
+        // ГЕЙМИФИКАЦИЯ: Получение прогресса до следующего уровня
+        function getLevelProgress(totalScore) {
+            const currentLevel = getLevel(totalScore);
+            const currentIndex = levels.indexOf(currentLevel);
+            if (currentIndex === levels.length - 1) {
+                return 100; // Максимальный уровень
+            }
+            const nextLevel = levels[currentIndex + 1];
+            const range = nextLevel.min - currentLevel.min;
+            const progress = totalScore - currentLevel.min;
+            return Math.floor((progress / range) * 100);
+        }
+
+        // ГЕЙМИФИКАЦИЯ: Отображение статистики
+        function displayPlayerStats() {
+            const progress = loadProgress();
+            const level = getLevel(progress.totalScore);
+            const levelProgress = getLevelProgress(progress.totalScore);
+            const nextLevel = levels[levels.indexOf(level) + 1];
+
+            let html = `
+                <div class="level-badge">
+                    <div class="icon">${level.icon}</div>
+                    <div>
+                        <div>${level.name}</div>
+                        <small>${progress.totalScore} очков</small>
+                    </div>
+                </div>
+                <div class="total-score">
+                    Игр сыграно: ${progress.gamesPlayed}
+                </div>
+            `;
+
+            if (nextLevel) {
+                html += `
+                    <div style="width: 100%; margin-top: 10px;">
+                        <small>До ${nextLevel.icon} ${nextLevel.name}: ${nextLevel.min - progress.totalScore} очков</small>
+                        <div style="background: rgba(255,255,255,0.3); height: 8px; border-radius: 4px; overflow: hidden; margin-top: 5px;">
+                            <div style="background: white; height: 100%; width: ${levelProgress}%; transition: width 0.5s;"></div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            document.getElementById('playerStats').innerHTML = html;
+        }
+
+        // ГЕЙМИФИКАЦИЯ: Проверка достижений
+        function checkAchievements(gameStats) {
+            const progress = loadProgress();
+            const newAchievements = [];
+
+            // Первая игра
+            if (progress.gamesPlayed === 1 && !progress.achievements.includes('firstGame')) {
+                newAchievements.push('firstGame');
+            }
+
+            // Идеальная игра
+            if (gameStats.correctCount === 15 && !progress.achievements.includes('perfectGame')) {
+                newAchievements.push('perfectGame');
+            }
+
+            // Серии
+            if (gameStats.bestStreak >= 5 && !progress.achievements.includes('streak5')) {
+                newAchievements.push('streak5');
+            }
+            if (gameStats.bestStreak >= 10 && !progress.achievements.includes('streak10')) {
+                newAchievements.push('streak10');
+            }
+
+            // Скорость
+            if (gameStats.fastAnswer && !progress.achievements.includes('speedster')) {
+                newAchievements.push('speedster');
+            }
+
+            // Марафонец
+            if (progress.gamesPlayed >= 10 && !progress.achievements.includes('marathoner')) {
+                newAchievements.push('marathoner');
+            }
+
+            // Исследователь и Учёный
+            if (progress.questionsAnswered >= 50 && !progress.achievements.includes('explorer')) {
+                newAchievements.push('explorer');
+            }
+            if (progress.questionsAnswered >= 100 && !progress.achievements.includes('scholar')) {
+                newAchievements.push('scholar');
+            }
+
+            // Сохраняем новые достижения
+            newAchievements.forEach(ach => {
+                if (!progress.achievements.includes(ach)) {
+                    progress.achievements.push(ach);
+                    progress.totalScore += achievementsDefs[ach].points;
+                }
+            });
+
+            saveProgress(progress);
+            return newAchievements;
+        }
+
+        // ГЕЙМИФИКАЦИЯ: Показать новые достижения
+        function showNewAchievements(achievements) {
+            if (achievements.length === 0) return;
+
+            let html = '<div class="achievements-container"><h3>🎉 Новые достижения!</h3><div class="achievements-grid">';
+
+            achievements.forEach(achId => {
+                const ach = achievementsDefs[achId];
+                html += `
+                    <div class="achievement unlocked">
+                        <div class="icon">${ach.icon}</div>
+                        <div class="title">${ach.name}</div>
+                        <div class="desc">${ach.desc}</div>
+                        <div style="color: #FFD700; font-weight: bold; margin-top: 5px;">+${ach.points} очков</div>
+                    </div>
+                `;
+            });
+
+            html += '</div></div>';
+            document.getElementById('newAchievementsContainer').innerHTML = html;
+        }
+
+        // ГЕЙМИФИКАЦИЯ: Экран всех достижений
+        function showAchievements() {
+            const progress = loadProgress();
+            let html = '';
+
+            Object.keys(achievementsDefs).forEach(achId => {
+                const ach = achievementsDefs[achId];
+                const unlocked = progress.achievements.includes(achId);
+                html += `
+                    <div class="achievement ${unlocked ? 'unlocked' : 'locked'}">
+                        <div class="icon">${ach.icon}</div>
+                        <div class="title">${ach.name}</div>
+                        <div class="desc">${ach.desc}</div>
+                        ${unlocked ? `<div style="color: #FFD700; font-weight: bold; margin-top: 5px;">✓ Получено</div>` : ''}
+                    </div>
+                `;
+            });
+
+            document.getElementById('achievementsGrid').innerHTML = html;
+            document.getElementById('startScreen').classList.remove('active');
+            document.getElementById('achievementsScreen').classList.add('active');
+        }
+
+        // ГЕЙМИФИКАЦИЯ: Таблица лидеров
+        function updateLeaderboard(score) {
+            const progress = loadProgress();
+            const date = new Date().toLocaleDateString('ru-RU');
+
+            progress.leaderboard.push({
+                score: score,
+                date: date,
+                level: getLevel(progress.totalScore).name
+            });
+
+            // Сортируем и оставляем топ-10
+            progress.leaderboard.sort((a, b) => b.score - a.score);
+            progress.leaderboard = progress.leaderboard.slice(0, 10);
+
+            saveProgress(progress);
+        }
+
+        function showLeaderboard() {
+            const progress = loadProgress();
+            let html = '';
+
+            if (progress.leaderboard.length === 0) {
+                html = '<p style="text-align: center; color: #666;">Сыграйте первую игру, чтобы попасть в таблицу лидеров!</p>';
+            } else {
+                progress.leaderboard.forEach((entry, index) => {
+                    const rankClass = index === 0 ? 'top1' : index === 1 ? 'top2' : index === 2 ? 'top3' : '';
+                    const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : '';
+                    html += `
+                        <div class="leaderboard-item ${rankClass}">
+                            <div class="leaderboard-rank">${medal || (index + 1)}</div>
+                            <div class="leaderboard-info">
+                                <div style="font-weight: bold;">${entry.level}</div>
+                                <div style="font-size: 0.9em; color: #666;">${entry.date}</div>
+                            </div>
+                            <div class="leaderboard-score">${entry.score} очков</div>
+                        </div>
+                    `;
+                });
+            }
+
+            document.getElementById('leaderboardList').innerHTML = html;
+            document.getElementById('startScreen').classList.remove('active');
+            document.getElementById('leaderboardScreen').classList.add('active');
+        }
+
+        function backToStart() {
+            document.getElementById('achievementsScreen').classList.remove('active');
+            document.getElementById('leaderboardScreen').classList.remove('active');
+            document.getElementById('startScreen').classList.add('active');
+            displayPlayerStats();
+        }
+
         const allQuestions = [
             {
                 question: "🧬 ТАЙНА 1: Если развернуть ДНК из одной клетки человека, какой она будет длины?",
@@ -1427,6 +1904,15 @@
         let score = 0;
         let selectedAnswer = null;
 
+        // ГЕЙМИФИКАЦИЯ: Статистика текущей игры
+        let gameStats = {
+            correctCount: 0,
+            currentStreak: 0,
+            bestStreak: 0,
+            fastAnswer: false,
+            questionStartTime: 0
+        };
+
         function getRandomQuestions(arr, count) {
             const shuffled = [...arr].sort(() => Math.random() - 0.5);
             return shuffled.slice(0, count);
@@ -1435,6 +1921,16 @@
         function startGame() {
             currentQuestion = 0;
             score = 0;
+
+            // ГЕЙМИФИКАЦИЯ: Сброс статистики игры
+            gameStats = {
+                correctCount: 0,
+                currentStreak: 0,
+                bestStreak: 0,
+                fastAnswer: false,
+                questionStartTime: Date.now()
+            };
+
             // Выбираем 15 случайных вопросов из 100
             questions = getRandomQuestions(allQuestions, 15);
             document.getElementById('startScreen').classList.remove('active');
@@ -1447,13 +1943,22 @@
             const question = questions[currentQuestion];
             const container = document.getElementById('questionContainer');
 
+            // ГЕЙМИФИКАЦИЯ: Засекаем время начала вопроса
+            gameStats.questionStartTime = Date.now();
+
             let html = `
                 <div class="question">
                     <h2>Вопрос ${currentQuestion + 1} из ${questions.length}</h2>
                     <p>${question.question}</p>
                 </div>
-                <div class="options">
             `;
+
+            // ГЕЙМИФИКАЦИЯ: Показываем текущую серию
+            if (gameStats.currentStreak > 0) {
+                html += `<div class="streak-indicator">🔥 Серия: ${gameStats.currentStreak}</div>`;
+            }
+
+            html += '<div class="options">';
 
             question.options.forEach((option, index) => {
                 html += `<div class="option" onclick="selectAnswer(${index})" data-index="${index}">${option}</div>`;
@@ -1473,6 +1978,12 @@
             const question = questions[currentQuestion];
             const options = document.querySelectorAll('.option');
 
+            // ГЕЙМИФИКАЦИЯ: Проверяем скорость ответа
+            const answerTime = (Date.now() - gameStats.questionStartTime) / 1000;
+            if (answerTime < 3 && selectedAnswer === question.correct) {
+                gameStats.fastAnswer = true;
+            }
+
             options.forEach((option, i) => {
                 option.style.pointerEvents = 'none';
                 if (i === question.correct) {
@@ -1482,9 +1993,23 @@
                 }
             });
 
+            // ГЕЙМИФИКАЦИЯ: Обновляем статистику
             if (selectedAnswer === question.correct) {
                 score += 10;
+                gameStats.correctCount++;
+                gameStats.currentStreak++;
+                if (gameStats.currentStreak > gameStats.bestStreak) {
+                    gameStats.bestStreak = gameStats.currentStreak;
+                }
+
+                // Показываем мультипликатор при серии
+                if (gameStats.currentStreak >= 3) {
+                    showComboMultiplier(gameStats.currentStreak);
+                }
+
                 updateScore();
+            } else {
+                gameStats.currentStreak = 0; // Сбрасываем серию
             }
 
             // Показываем объяснение
@@ -1498,6 +2023,19 @@
             container.innerHTML += explanationHTML;
 
             document.getElementById('nextBtn').style.display = 'block';
+        }
+
+        // ГЕЙМИФИКАЦИЯ: Показать мультипликатор комбо
+        function showComboMultiplier(streak) {
+            const existing = document.querySelector('.combo-multiplier');
+            if (existing) existing.remove();
+
+            const div = document.createElement('div');
+            div.className = 'combo-multiplier';
+            div.textContent = `🔥 x${streak} COMBO!`;
+            document.body.appendChild(div);
+
+            setTimeout(() => div.remove(), 2000);
         }
 
         function nextQuestion() {
@@ -1525,6 +2063,31 @@
             const maxScore = questions.length * 10;
             const percentage = (score / maxScore) * 100;
 
+            // ГЕЙМИФИКАЦИЯ: Обновляем общий прогресс
+            const progress = loadProgress();
+            const oldTotalScore = progress.totalScore;
+            progress.totalScore += score;
+            progress.gamesPlayed++;
+            progress.questionsAnswered += questions.length;
+            progress.correctAnswers += gameStats.correctCount;
+
+            if (score > progress.bestScore) {
+                progress.bestScore = score;
+            }
+
+            saveProgress(progress);
+
+            // ГЕЙМИФИКАЦИЯ: Обновляем таблицу лидеров
+            updateLeaderboard(score);
+
+            // ГЕЙМИФИКАЦИЯ: Проверяем достижения
+            const newAchievements = checkAchievements(gameStats);
+
+            // Проверяем повышение уровня
+            const oldLevel = getLevel(oldTotalScore);
+            const newLevel = getLevel(progress.totalScore);
+            const leveledUp = oldLevel.name !== newLevel.name;
+
             let emoji, title, feedback;
 
             if (percentage >= 90) {
@@ -1547,17 +2110,46 @@
 
             document.getElementById('emojiResult').textContent = emoji;
             document.getElementById('resultTitle').textContent = title;
-            document.getElementById('finalScore').textContent = `${score} из ${maxScore} (${percentage.toFixed(0)}%)`;
-            document.getElementById('feedbackContainer').innerHTML = `
-                <h3>Результат</h3>
-                <p>${feedback}</p>
-            `;
+
+            let resultHTML = `${score} из ${maxScore} (${percentage.toFixed(0)}%)`;
+            if (gameStats.bestStreak > 1) {
+                resultHTML += `<br><small>🔥 Лучшая серия: ${gameStats.bestStreak}</small>`;
+            }
+            document.getElementById('finalScore').innerHTML = resultHTML;
+
+            let feedbackHTML = `<h3>Результат</h3><p>${feedback}</p>`;
+
+            // ГЕЙМИФИКАЦИЯ: Показываем повышение уровня
+            if (leveledUp) {
+                feedbackHTML += `
+                    <div style="background: linear-gradient(135deg, ${newLevel.color}22 0%, ${newLevel.color}11 100%);
+                                padding: 15px; border-radius: 10px; margin-top: 15px; border-left: 4px solid ${newLevel.color};">
+                        <h3 style="color: ${newLevel.color}; margin-bottom: 10px;">🎉 ПОВЫШЕНИЕ УРОВНЯ!</h3>
+                        <div style="font-size: 2em; margin: 10px 0;">${newLevel.icon}</div>
+                        <p style="font-size: 1.2em; font-weight: bold;">${newLevel.name}</p>
+                        <p>Общий счёт: ${progress.totalScore} очков</p>
+                    </div>
+                `;
+            } else {
+                feedbackHTML += `<p style="margin-top: 15px;">💎 Общий счёт: ${progress.totalScore} очков (+${score})</p>`;
+            }
+
+            document.getElementById('feedbackContainer').innerHTML = feedbackHTML;
+
+            // ГЕЙМИФИКАЦИЯ: Показываем новые достижения
+            showNewAchievements(newAchievements);
         }
 
         function restartGame() {
             document.getElementById('resultScreen').classList.remove('active');
             document.getElementById('startScreen').classList.add('active');
+            displayPlayerStats(); // Обновляем статистику
         }
+
+        // ГЕЙМИФИКАЦИЯ: Инициализация при загрузке страницы
+        window.addEventListener('DOMContentLoaded', () => {
+            displayPlayerStats();
+        });
     </script>
 </body>
 </html>
